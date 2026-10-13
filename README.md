@@ -1,5 +1,3 @@
-# the-a-in-the-i-volume-4
-Corporate-Academic framework for Project Koridor by Odynex Axis Logistics LLC. Focuses on Low-Altitude Shielding, Atypical Air Environments (AAE), and rural drone network routing rules
 # Project Koridor: The A in the I (Volume 4)
 
 Official production-tier geospatial code repository for **Project Koridor**, an automated logistics routing initiative by **Odynex Axis Logistics LLC** (Albany, GA). 
