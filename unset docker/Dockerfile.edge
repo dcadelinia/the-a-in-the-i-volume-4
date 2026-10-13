@@ -1,0 +1,34 @@
+# Use the official NVIDIA Jetson L4T PyTorch base image optimized for JetPack 6+
+FROM nvcr.io/nand/l4t-pytorch:r36.3.0-pth2.2-py3.10
+
+# Set system environment variables for CUDA execution optimization
+ENV DEBIAN_FRONTEND=noninteractive
+ENV FORCE_CUDA=1
+ENV TORCH_CUDA_ARCH_LIST="8.7"
+
+WORKDIR /app
+
+# Install native edge OS dependencies for computer vision and spatial frameworks
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gdal-bin \
+    libgdal-dev \
+    python3-gdal \
+    libgl1-mesa-glx \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up spatial library environment anchors
+ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
+ENV C_INCLUDE_PATH=/usr/include/gdal
+
+# Copy and install Python dependencies
+COPY requirements.txt .
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy source assets directly into production workspace
+COPY src/ ./src/
+
+# Expose local endpoint communication port
+EXPOSE 8000
+
+# Fire up the container using optimized edge-processing threading layouts
+CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
